@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "types": [
+            "node",
+            "vitest/globals"
+        ],
+        "noEmit": false,
+        "outDir": "lib",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "jsx": "react-jsx",
+        "target": "esnext",
+        "useDefineForClassFields": false, 
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "skipLibCheck": true,
+        "declaration": true
+    },
+    "include": [
+        "src",
+        "vitest.config.ts"
+    ]
+}

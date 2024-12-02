@@ -1,0 +1,54 @@
+{
+  "name": "@dipakparmar/salesforce-auth-expo",
+  "type": "module",
+  "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.js"
+    }
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "check": "tsc --noEmit",
+    "dev:clean": "rm -rf ./**/*.{js,js.map,d.ts}",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "lint": "eslint --ext .ts src",
+    "test": "vitest src/",
+    "prepack": "pnpm run build && pnpm run test"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dipakparmar/salesforce-auth-expo"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "eslint": "^9.16.0",
+    "prettier": "^3.4.1",
+    "typescript": "^5.0.0",
+    "vitest": "^2.1.6"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.0",
+    "expo-auth-session": "^6.0.0",
+    "@types/bun": "latest",
+    "expo-crypto": "^14.0.1",
+    "expo-secure-store": "^14.0.0",
+    "expo-web-browser": "^14.0.1",
+    "react-native": ">=0.76.3 <1"
+  },
+  "dependencies": {
+    "crypto-es": "^2.1.0",
+    "js-base64": "^3.7.7"
+  }
+}
