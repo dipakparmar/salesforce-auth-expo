@@ -103,18 +103,95 @@ export interface GeneralAuthConfig {
 export interface UserInfo {
   /** The full name of the user */
   name: string;
-  
+
   /** The email address of the user */
   email: string;
-  
+
   /** URL to the user's profile picture */
   picture: string;
-  
+
   /** The username preferred by the user */
   preferred_username: string;
-  
+
   /** URL to the user's profile */
   profile: string;
+
+  /** The unique identifier for the user */
+  user_id: string;
+
+  /** The unique identifier for the organization */
+  organization_id: string;
+
+  /** The nickname of the user */
+  nickname: string;
+
+  /** Indicates if the email is verified */
+  email_verified: boolean;
+
+  /** The given name of the user */
+  given_name: string;
+
+  /** The family name of the user */
+  family_name: string;
+
+  /** The timezone of the user */
+  zoneinfo: string;
+
+  /** The user's address */
+  address: {
+    country: string;
+  };
+
+  /** Indicates if the user is a Salesforce integration user */
+  is_salesforce_integration_user: boolean;
+
+  /** URLs related to the user */
+  urls: {
+    enterprise: string;
+    metadata: string;
+    partner: string;
+    rest: string;
+    sobjects: string;
+    search: string;
+    query: string;
+    recent: string;
+    tooling_soap: string;
+    tooling_rest: string;
+    profile: string;
+    feeds: string;
+    groups: string;
+    users: string;
+    feed_items: string;
+    feed_elements: string;
+    custom_domain: string;
+  };
+
+  /** Indicates if the user is active */
+  active: boolean;
+
+  /** The type of user */
+  user_type: string;
+
+  /** The language of the user */
+  language: string;
+
+  /** The locale of the user */
+  locale: string;
+
+  /** The UTC offset of the user */
+  utcOffset: number;
+
+  /** The last updated timestamp */
+  updated_at: string;
+
+  /** Indicates if the app is installed */
+  is_app_installed: boolean;
+
+  /** Photos of the user */
+  photos: {
+    picture: string;
+    thumbnail: string;
+  };
 }
 
 /**
