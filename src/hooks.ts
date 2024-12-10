@@ -1,11 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo } from "react";
 
-import { SalesforceAuthContext } from './context';
-import type { UserInfo } from './client';
-import { maybeCompleteAuthSession } from 'expo-web-browser';
+import { SalesforceAuthContext } from "./context";
+import type { UserInfo } from "./client";
+import { maybeCompleteAuthSession } from "expo-web-browser";
 
 export const useSalesforceAuth = () => {
-  const { client, isAuthenticated, setIsAuthenticated, isInitialized } = 
+  const { client, isAuthenticated, setIsAuthenticated, isInitialized } =
     useContext(SalesforceAuthContext);
 
   useEffect(() => {
@@ -26,14 +26,28 @@ export const useSalesforceAuth = () => {
     return client.getUserInfo();
   }, [client]);
 
+  const getAccessToken = useCallback(async (): Promise<string | null> => {
+    return client.getAccessToken();
+  }, [client]);
+
   return useMemo(
     () => ({
+      client,
       isAuthenticated,
       isInitialized,
       signIn,
       signOut,
       getUserInfo,
+      getAccessToken,
     }),
-    [isAuthenticated, isInitialized, signIn, signOut, getUserInfo]
+    [
+      client,
+      isAuthenticated,
+      isInitialized,
+      signIn,
+      signOut,
+      getUserInfo,
+      getAccessToken,
+    ]
   );
 };

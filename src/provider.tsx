@@ -3,7 +3,7 @@ import { SalesforceAuthClient, type SalesforceConfig } from './client';
 import { SalesforceAuthContext } from './context';
 
 export type SalesforceAuthProviderProps = {
-  config: SalesforceConfig;
+  config: SalesforceConfig ;
   children?: ReactNode;
 };
 

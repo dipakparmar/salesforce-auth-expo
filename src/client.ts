@@ -4,6 +4,7 @@ import { generateCodeChallenge, generateRandomString } from "./utils";
 import { Platform } from "react-native";
 import { SalesforceAuthError } from "./errors";
 import { makeRedirectUri } from "expo-auth-session";
+import { SalesforceRestClient } from './rest';
 
 /**
  * Configuration interface for Salesforce authentication.
@@ -200,7 +201,7 @@ export interface UserInfo {
  * Supports both web and mobile platforms using appropriate storage mechanisms.
  */
 export class SalesforceAuthClient {
-  protected storage: SecureStorage | BrowserStorage;
+  private storage: SecureStorage | BrowserStorage;
   private authEndpoint: string;
   private tokenEndpoint: string;
   private revocationEndpoint: string;
@@ -208,6 +209,7 @@ export class SalesforceAuthClient {
   private authSessionResult?: WebBrowser.WebBrowserAuthSessionResult;
   private prompt: Prompt | Prompt[] = [Prompt.Login, Prompt.Consent];
   private preferEphemeralSession = true;
+  private restClient: SalesforceRestClient | undefined;
 
   /**
    * Creates a new instance of SalesforceAuthClient.
@@ -395,5 +397,30 @@ export class SalesforceAuthClient {
         data.refresh_token
       );
     }
+  }
+
+  /**
+   * Gets the current access token from storage.
+   *
+   */
+  async getAccessToken(): Promise<string | null> {
+    return this.storage.getItem("accessToken" as PersistKey.AccessToken);
+  }
+
+  /**
+   * Get the REST API client instance
+   * @throws {SalesforceAuthError} When user info is not available
+   */
+  async getRestClient(): Promise<SalesforceRestClient> {
+    if (!this.restClient) {
+      const userInfo = await this.getUserInfo();
+      this.restClient = new SalesforceRestClient(
+        {
+          instanceUrl: new URL(userInfo.urls.rest).origin,
+        },
+        () => this.getAccessToken()
+      );
+    }
+    return this.restClient;
   }
 }
