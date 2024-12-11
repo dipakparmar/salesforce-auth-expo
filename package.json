@@ -47,6 +47,7 @@
     "react-native": ">=0.76.3 <1"
   },
   "dependencies": {
+    "@silverhand/essentials": "^2.9.2",
     "crypto-es": "^2.1.0",
     "js-base64": "^3.7.7"
   }
