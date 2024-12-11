@@ -10,6 +10,7 @@ A React Native authentication library for Salesforce OAuth 2.0 with PKCE support
 - Platform-specific storage handling (web/mobile)
 - Built-in hooks and context providers
 - User information retrieval
+- Salesforce REST API client
 
 ## Installation
 
@@ -25,7 +26,11 @@ pnpm add @dipakparmar/salesforce-auth-expo
 
 ### Dependencies
 
-This package requires the following peer dependencies:
+This package requires the following peer dependencies, you need to install them manually on your project:
+
+```bash
+npm install @react-native-async-storage/async-storage expo-auth-session expo-crypto expo-secure-store expo-web-browser react-native
+```
 
 ```json
 {
@@ -43,9 +48,9 @@ This package requires the following peer dependencies:
 1. Wrap your app with SalesforceAuthProvider:
 
 ```jsx
-import { SalesforceAuthProvider } from "@dipakparmar/salesforce-auth-expo";
+import { SalesforceAuthProvider, type SalesforceConfig, type GeneralAuthConfig } from "@dipakparmar/salesforce-auth-expo";
 
-const config = {
+const config: SalesforceConfig & GeneralAuthConfig = {
   clientId: "YOUR_SALESFORCE_CLIENT_ID",
   clientSecret: "YOUR_SALESFORCE_CLIENT_SECRET", // Optional: Only needed for web platforms
   redirectUri: "myapp://callback", // Optional: Defaults to myapp://
@@ -93,6 +98,60 @@ function AuthComponent() {
       )}
     </View>
   );
+}
+```
+
+## REST API Usage
+
+The library provides a REST API client for interacting with Salesforce data. Access it using the `getRestClient()` method from the auth hook:
+
+```jsx
+import { useSalesforceAuth } from "@dipakparmar/salesforce-auth-expo";
+
+function SalesforceDataComponent() {
+  const { getRestClient } = useSalesforceAuth();
+
+  const fetchAccounts = async () => {
+    try {
+      const client = await getRestClient();
+      
+      // Query records
+      const result = await client.query<Account>('SELECT Id, Name FROM Account LIMIT 10');
+      console.log('Accounts:', result.records);
+      
+      // Create a record
+      const newAccount = await client.create<Account>('Account', {
+        Name: 'New Account'
+      });
+      
+      // Update a record
+      await client.update<Account>('Account', newAccount.id, {
+        Name: 'Updated Account'
+      });
+      
+      // Delete a record
+      await client.delete('Account', newAccount.id);
+      
+      // Retrieve a single record
+      const account = await client.retrieve<Account>('Account', newAccount.id, ['Name', 'Industry']);
+      
+      // Get object metadata
+      const metadata = await client.describe<AccountMetadata>('Account');
+      
+    } catch (error) {
+      console.error('API error:', error);
+    }
+  };
+
+  return (
+    <Button title="Fetch Accounts" onPress={fetchAccounts} />
+  );
+}
+
+interface Account {
+  Id: string;
+  Name: string;
+  Industry?: string;
 }
 ```
 

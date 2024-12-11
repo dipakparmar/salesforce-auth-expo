@@ -125,4 +125,21 @@ export class SalesforceRestClient {
 
     return response.json();
   }
+
+  /**
+   * Get metadata description of a Salesforce object
+   */
+  async describe<T>(objectName: string): Promise<T> {
+    const headers = await this.getHeaders();
+    const response = await fetch(
+      `${this.baseUrl}/sobjects/${objectName}/describe`,
+      { headers }
+    );
+
+    if (!response.ok) {
+      throw new Error('Describe failed: ' + response.statusText);
+    }
+
+    return response.json();
+  }
 }
