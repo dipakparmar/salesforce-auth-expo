@@ -1,7 +1,7 @@
 {
   "name": "@dipakparmar/salesforce-auth-expo",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha2",
   "publishConfig": {
     "access": "public"
   },
