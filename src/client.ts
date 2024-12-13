@@ -4,7 +4,7 @@ import { generateCodeChallenge, generateRandomString } from "./utils";
 import { Platform } from "react-native";
 import { SalesforceAuthError } from "./errors";
 import { makeRedirectUri } from "expo-auth-session";
-import { SalesforceRestClient } from './rest';
+import { SalesforceRestClient } from "./rest";
 
 /**
  * Configuration interface for Salesforce authentication.
@@ -35,6 +35,14 @@ export interface SalesforceConfig {
    * @default false
    */
   sandbox?: boolean;
+
+  /**
+   * Custom Branded Domain for Salesforce authentication.
+   * If provided, this domain will be used instead of the default login.salesforce.com or test.salesforce.com.
+   * Only when sandbox is false, the default domain is login.salesforce.com.
+   * @default undefined
+   */
+  overrideAuthDomain?: string;
 }
 
 /**
@@ -203,6 +211,7 @@ export interface UserInfo {
 export class SalesforceAuthClient {
   private storage: SecureStorage | BrowserStorage;
   private authEndpoint: string;
+  private overrideAuthDomain?: string;
   private tokenEndpoint: string;
   private revocationEndpoint: string;
   private userInfoEndpoint: string;
@@ -223,9 +232,22 @@ export class SalesforceAuthClient {
         ? new BrowserStorage(config.clientId)
         : new SecureStorage(`salesforce.${config.clientId}`);
 
-    const domain = config.sandbox
-      ? "test.salesforce.com"
+    if (config.overrideAuthDomain) {
+      const domainPattern = /^(?!https:\/\/)(?!\/)[a-zA-Z0-9.-]+$/;
+      if (!domainPattern.test(config.overrideAuthDomain)) {
+        throw new Error(
+          "Invalid overrideAuthDomain: must be a hostname without https and /"
+        );
+      }
+    }
+
+    this.overrideAuthDomain = config.overrideAuthDomain;
+    const domain = this.overrideAuthDomain
+      ? config.sandbox === true
+        ? "test.salesforce.com"
+        : this.overrideAuthDomain
       : "login.salesforce.com";
+
     this.authEndpoint = `https://${domain}/services/oauth2/authorize`;
     this.tokenEndpoint = `https://${domain}/services/oauth2/token`;
     this.revocationEndpoint = `https://${domain}/services/oauth2/revoke`;
